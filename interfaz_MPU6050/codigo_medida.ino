@@ -32,5 +32,5 @@ void loop() {
 
   Serial.println();
 
-  delay(20); // 50 Hz
+  delay(20); // 20 ms equivalente a 50 Hz
 }

@@ -9,7 +9,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 # === CONFIGURAR SERIAL ===
-ser = serial.Serial('/dev/cu.usbserial-0001', 115200, timeout=1)  # Cambia el puerto según tu caso
+puerto_serial = serial.Serial('/dev/cu.usbserial-0001', 115200, timeout=1)  # Cambia el puerto según tu caso
 
 # === FUNCIONES DE FILTRO ===
 def filtro_complementario(prev_angle, gyro_rate, accel_angle, dt, alpha=0.98):
@@ -33,7 +33,7 @@ class App:
         self.ax.set_xlim([-1, 1])
         self.ax.set_ylim([-1, 1])
         self.ax.set_zlim([-1, 1])
-        self.ax.set_facecolor("#10141A")
+        self.ax.set_facecolor("#FFFFFF")
 
         self.cubo, = self.ax.plot([], [], [], color="cyan", linewidth=2)
         self.canvas = FigureCanvasTkAgg(fig, master=root)
@@ -48,7 +48,12 @@ class App:
     # === LEER SERIAL Y ACTUALIZAR ===
     def actualizar_datos(self):
         try:
-            raw_line = ser.readline()
+            # ------- Para limpiar el buffer si se acumulan demasiados datos -------
+            if puerto_serial.in_waiting > 200: # Si el umbral es mayor a 200 bytes -> varias lecturas 
+                puerto_serial.reset_input_buffer()
+                print("El buffer serial esta limpio para evitar saturación")
+
+            raw_line = puerto_serial.readline()
             line = raw_line.decode('utf-8', errors='ignore').strip()
 
             if line:
@@ -88,7 +93,9 @@ class App:
         except Exception as ex:
             print(f"Error inesperado: {ex}")
         
-        self.root.after(10, self.actualizar_datos)
+        # Esta es la instrucción de frecuancia para actualizar los datos
+        # La frecuencia es de 50 Hz que equivale a 20 ms
+        self.root.after(20, self.actualizar_datos)
 
     # === DIBUJAR CUBO 3D ===
     def dibujar_cubo(self):
