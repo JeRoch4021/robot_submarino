@@ -113,8 +113,8 @@ class App:
         ])
 
         # Rotaciones (roll, pitch, yaw)
-        roll_rad = math.radians(self.roll)
-        pitch_rad = math.radians(self.pitch)
+        roll_rad = math.radians(self.roll) 
+        pitch_rad = math.radians(self.pitch) 
         yaw_rad = math.radians(self.yaw)
 
         Rx = np.array([

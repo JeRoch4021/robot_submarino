@@ -37,29 +37,34 @@
             </div>
         </div>
         <script>
+            const API_URL = 'https://4i25h1owl2.execute-api.us-east-2.amazonaws.com/v1/data'; // URL del endpoint API Gateway
+            
             async function fetchData() {
                 try {
-                    const response = await fetch('/mpu6050/data');
-                    const data = await response.json();
+                    const response = await fetch(API_URL); // Solicitud al endpoint API Gateway
+                    const data = await response.json(); // Parsear la respuesta JSON
                     
                     document.getElementById('accel-x').textContent = data.accel_x;
                     document.getElementById('accel-y').textContent = data.accel_y;
                     document.getElementById('accel-z').textContent = data.accel_z;
+                    
                     document.getElementById('gyro-x').textContent = data.gyro_x;
                     document.getElementById('gyro-y').textContent = data.gyro_y;
                     document.getElementById('gyro-z').textContent = data.gyro_z;
+
+                    document.getElementById('dht11-temperature').textContent = data.temperature;
+                    document.getElementById('dht11-humidity').textContent = data.humidity;
+                    
+                    document.getElementById('ph-data').textContent = data.ph;
                 } catch (error) {
-                    console.error('Error fetching MPU6050 data:', error);
+                    console.error('Error al obtener datos:', error);
                 }
             }
 
-            setInterval(fetchData, 1000);
-            fetchData();
-
             async function actualizarModelo3D() {
                 try {
-                    const response = await fetch('/mpu6050/orientation');
-                    const data = await response.json();
+                    const response = await fetch(API_URL); // Solicitud al endpoint API Gateway
+                    const data = await response.json(); // Parsear la respuesta JSON
                     
                     const modelo = document.querySelector('.modelo');
                     modelo.style.transform = `rotateX(${data.pitch}deg) rotateY(${data.roll}deg) rotateZ(${data.yaw}deg)`;
@@ -67,9 +72,9 @@
                     console.error('Error fetching orientation data:', error);
                 }
             }
-
+            
+            setInterval(fetchData, 1000);
             setInterval(actualizarModelo3D, 1000);
-            actualizarModelo3D();
         </script>
     </body>
 </html>
