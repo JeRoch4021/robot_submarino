@@ -1,0 +1,14 @@
+path: C:\Users\chris\OneDrive\Desktop\Bleaching Classification.v1i.folder
+train: train
+val: valid
+test: test   
+carpeta 'test'
+
+nc: 6
+names:
+  - bleach-1
+  - bleach-2
+  - bleach-3
+  - bleach-4
+  - bleach-5
+  - bleach-6
