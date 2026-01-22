@@ -1,3 +1,8 @@
+/*
+Autores
+  Rocha Sainez Jeshua Isaac
+  Becerra Quezada Fabricio
+*/
 // Implementación de librerías para el desarrollo de este proyecto.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
