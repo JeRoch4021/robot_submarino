@@ -1,3 +1,4 @@
+// Christian Rafael Landeros Portillo
 #include "esp_camera.h"
 #include <WiFi.h>
 
@@ -9,8 +10,8 @@
 // ===========================
 // Credenciales de red WiFi
 // ===========================
-const char* ssid = "Waos";
-const char* password = "000000009";
+const char* ssid = "RED";
+const char* password = "CONTRASEÑA";
 
 // Inicializacion de la camara y el servidor web
 void startCameraServer();
