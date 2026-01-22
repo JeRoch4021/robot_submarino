@@ -1,3 +1,7 @@
+"""
+Autor:
+    Landeros Portillo Christian Rafael
+"""
 import cv2
 from ultralytics import YOLO
 import os
@@ -136,4 +140,5 @@ while True:
         break
 
 cv2.destroyAllWindows()
+
 print("¡Programa terminado!")
