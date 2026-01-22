@@ -2,19 +2,21 @@
 #include <WiFi.h>
 
 // ===========================
-// Select camera model in board_config.h
+// Seleccion de la placa
 // ===========================
 #include "board_config.h"
 
 // ===========================
-// Enter your WiFi credentials
+// Credenciales de red WiFi
 // ===========================
 const char* ssid = "Waos";
 const char* password = "000000009";
 
+// Inicializacion de la camara y el servidor web
 void startCameraServer();
 void setupLedFlash();
 
+// Configuracion inicial
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
@@ -41,8 +43,8 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.frame_size = FRAMESIZE_UXGA;
-  config.pixel_format = PIXFORMAT_JPEG;  // for streaming
-  //config.pixel_format = PIXFORMAT_RGB565; // for face detection/recognition
+  config.pixel_format = PIXFORMAT_JPEG;  // para streaming de video
+  //config.pixel_format = PIXFORMAT_RGB565; // para detección/reconocimiento facial
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
   config.fb_location = CAMERA_FB_IN_PSRAM;
   config.jpeg_quality = 12;

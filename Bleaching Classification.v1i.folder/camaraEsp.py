@@ -7,28 +7,31 @@ import time
 
 # ===================== CONFIGURACIÓN =====================
 ESP32_IP = "192.168.64.74"
-STREAM_URL = f"http://{ESP32_IP}/capture"   # Ruta que ya funciona en tu ESP32
+STREAM_URL = f"http://{ESP32_IP}/capture"   # Ruta de captura individual de fotos
 
+# ===================== CARGA DEL MODELO =====================
 model_path = os.path.join(os.getcwd(), "runs", "classify", "train2", "weights", "best.pt")
 
+# Verificar que el modelo existe
 if not os.path.exists(model_path):
     print(f"ERROR: No se encontró el modelo en:\n{model_path}")
     exit()
 
+# Cargar el modelo YOLOv8
 print(f"Modelo encontrado: {model_path}")
 model = YOLO(model_path)
 
-# ========================================================
+# ===================== INICIO DEL STREAM =====================
 print(f"Conectando a la cámara ESP32 vía /capture... {STREAM_URL}")
 print("Presiona Q para salir\n")
 
+# Configurar ventana OpenCV
 cv2.namedWindow("Clasificador de Corales (ESP32) - Presiona Q", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("Clasificador de Corales (ESP32) - Presiona Q", 400, 400)
 
 # ========================================================
 #    GENERADOR QUE PIDE FOTOS INDIVIDUALES CADA CIERTO TIEMPO
 # ========================================================
-
 def get_frames_from_capture(url, interval=0.002):
     """
     Generador que pide una foto nueva cada 'interval' segundos.
@@ -57,7 +60,7 @@ def get_frames_from_capture(url, interval=0.002):
 
         time.sleep(interval)  # Controla el FPS aproximado (0.5s → ~2 FPS)
 
-# Iniciamos el generador
+# Iniciar el generador de frames
 frame_generator = get_frames_from_capture(STREAM_URL, interval=0.002)
 
 frame_count = 0
@@ -65,6 +68,10 @@ start_time = time.time()
 
 print("¡Intentando recibir frames! Apunta la cámara al coral...\n")
 
+# ===================== BUCLE PRINCIPAL =====================
+"""
+Bucle principal que obtiene frames del generador, los clasifica y muestra el resultado.
+"""
 while True:
     try:
         frame = next(frame_generator)
@@ -98,17 +105,18 @@ while True:
     top3_conf = top5_conf[:3]
 
 # ===================== OVERLAY =====================
+    # Dibujar overlay con resultados de clasificación.
     overlay = frame.copy()
 
     # Rectángulo que ocupa ~1/3 de la ventana (ancho ~350-380 px, alto ~130 px)
     cv2.rectangle(overlay, (10, 10), (380, 140), (0, 0, 0), -1)
     cv2.addWeighted(overlay, 0.65, frame, 0.35, 0, frame)
 
-    # Top 1 compacto
+    # Top 1 grande
     cv2.putText(frame, f"{top1_name}", (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 100), 3)
     cv2.putText(frame, f"{top1_conf:.1%}", (20, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 100), 2)
 
-    # Top 3 más pequeño y con menos separación
+    # Top 3 pequeños debajo
     y = 105
     for i in range(3):
         name = results.names[top3_idx[i]]
