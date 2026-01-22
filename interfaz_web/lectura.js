@@ -1,3 +1,8 @@
+/*
+Autores:
+  Rocha Sainez Jeshua Isaac
+  Ornelas Valenzuela Laura Sofia
+*/
 // importar THREE.js y GLTFLoader para cargar y renderizar el modelo 3D
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
